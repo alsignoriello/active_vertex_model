@@ -30,7 +30,7 @@ def plot_network(vertices, polys, L, file):
 	fig = plt.figure()
 	ax = fig.add_subplot(1,1,1)
 	for x,y in vertices:
-		ax.scatter(x, y, c="m", marker=".", s=100)
+		ax.scatter(x, y, c="m", marker=".", s=50)
 
 	for poly in polys:
 		indices = poly.indices
@@ -91,25 +91,26 @@ def plot_edges(vertices, edges, L):
 
 
 
-vertex_file = sys.argv[1]
-edge_file = sys.argv[2]
-poly_file = sys.argv[3]
+# vertex_file = sys.argv[1]
+# edge_file = sys.argv[2]
+# poly_file = sys.argv[3]
 
-lx = 9 * (2 / (3 * (3**0.5)))**0.5
-ly = 4 * (2 / (3**0.5))**0.5
-A0 = 1.
-L = np.array([lx,ly])
+# # lx = 9 * (2 / (3 * (3**0.5)))**0.5
+# # ly = 4 * (2 / (3**0.5))**0.5
+# L = np.loadtxt("simulation1/L")
 
+# A0 = 1.
+# L = np.array([lx,ly])
 
-# get vertices
-vertices = read_vertices(vertex_file)
+# # get vertices
+# vertices = read_vertices(vertex_file)
 
-# get edges
-edges = read_edges(edge_file)
+# # get edges
+# edges = read_edges(edge_file)
 
-# get polygons
-poly_indices = read_poly_indices(poly_file)
-polys = build_polygons(poly_indices, A0)
+# # get polygons
+# poly_indices = read_poly_indices(poly_file)
+# polys = build_polygons(poly_indices, A0)
 
-file = "test.jpg"
-plot_network(vertices, polys, L, file)
+# file = "test.jpg"
+# plot_network(vertices, polys, L, file)

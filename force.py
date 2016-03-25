@@ -25,12 +25,12 @@ def get_forces(vertices, polys, edges, parameters):
 	Lambda = parameters['Lambda']
 	gamma = parameters['gamma']
 	eta = parameters['eta']
-
+	xi = parameters['xi']
 
 	f1 = F_elasticity(vertices, polys, ka, L)
 	f2 = F_adhesion(vertices, edges, Lambda, L)
 	f3 = F_contraction(vertices, polys, gamma, L)
-	f4 = F_motility(vertices, polys, eta)
+	f4 = F_motility(vertices, polys, eta, xi)
 
 	return -(f1 + f2 + f3 + f4)
 
@@ -41,26 +41,35 @@ def move_vertices(vertices, forces, parameters):
 	ly = parameters['ly']
 
 	vertices = vertices + delta_t * forces
+	n_vertices = vertices.shape[0]
 
 	# wrap around periodic boundaries
-	for i,(x,y) in enumerate(vertices):
+	for i in range(0, n_vertices):
+		x = vertices[i,0]
+		y = vertices[i,1]
+
 		if x < 0:
 			# wrap around to right
 			vertices[i,0] = x + lx
+			# print x, vertices[i,0]
 
 		if x > lx:
 			# wrap around to left
 			vertices[i,0] = x - lx
+			# print x, vertices[i,0]
 
 		if y < 0:
 			# wrap around to top
 			vertices[i,1] = y + ly
+			# print y, vertices[i,1]
 
 		if y > ly:
 			# wrap around to bottom
 			vertices[i,1] = y - ly
+			# print y, vertices[i,1]
 
-		return vertices 
+
+	return vertices 
 
 
 
@@ -196,7 +205,7 @@ def F_adhesion(vertices, edges, Lambda, L):
 	return forces
 
 # Force to move vertices of polys in particular direction
-def F_motility(vertices, polys, eta):
+def F_motility(vertices, polys, eta, xi):
 
 
 	n_vertices = len(vertices)
@@ -205,6 +214,7 @@ def F_motility(vertices, polys, eta):
 	# find neighbors for every poly
 	# defined as any two polys that share a vertex
 	avg_angles = np.zeros((len(polys), 2))
+
 	neighbor_count = np.ones(len(polys))
 
 	for i,poly in enumerate(polys):
@@ -218,20 +228,22 @@ def F_motility(vertices, polys, eta):
 					neighbor_count[i] += 1
 
 	for i,poly in enumerate(polys):
+
 		# noise variable
 		nx = np.random.uniform(-pi,pi)
 		ny = np.random.uniform(-pi,pi)
 		n = np.array([nx,ny])
-	
+		
 		# average all of the unit vectors for angles 
 		avg = (avg_angles[i,:] / neighbor_count[i])
-	
+		
 		# add this force direction for every vertex in current poly
 		for index in poly.indices:
-			forces[index, :] += avg + (eta * n)
-	
+			forces[index, :] += xi * (avg + (eta * n))
+		
 		# theta = avg + eta * noise
 		poly.theta = vector_2_angle(avg[0] + eta * n[0], avg[1] + eta * n[1])
+
 	return forces
 
 

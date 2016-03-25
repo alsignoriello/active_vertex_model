@@ -3,6 +3,8 @@
 vertex_file=$1
 edge_file=$2
 poly_file=$3
+folder=$4
+eta=$5
 
 
 # Relaxation (steepest descent)
@@ -11,7 +13,7 @@ poly_file=$3
 
 
 # Molecular Dynamics
-python MD.py $vertex_file $edge_file $poly_file 
+python MD.py $vertex_file $edge_file $poly_file $folder $eta
 
 # later, will add division simulations..
 # python divide.py $vertex_file $edge_file $poly_file 

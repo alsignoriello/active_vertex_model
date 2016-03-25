@@ -6,7 +6,7 @@ Builds a parameter dictionary
 
 """
 
-def get_parameters(lx, ly, ka, gamma, Lambda, eta, lmin, delta_t):
+def get_parameters(lx, ly, ka, gamma, Lambda, eta, xi, lmin, delta_t):
 
 	parameters = {}
 	
@@ -27,6 +27,9 @@ def get_parameters(lx, ly, ka, gamma, Lambda, eta, lmin, delta_t):
 
 	# eta - noise scaling coefficient
 	parameters['eta'] = eta
+
+	# xi - motility coefficient
+	parameters['xi'] = xi
 
 	# lmin - minimum bond length between two vertices
 	parameters['lmin'] = lmin

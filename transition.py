@@ -385,6 +385,8 @@ def T1_transition(vertices, polys, edges, parameters):
 	L = np.array([lx,ly])
 	lmin = parameters['lmin']
 
+	reverse = []
+
 	for edge in edges:
 		i1 = edge[0]
 		i2 = edge[1]
@@ -395,13 +397,14 @@ def T1_transition(vertices, polys, edges, parameters):
 
 		dist = euclidean_distance(v1[0], v1[1], v2[0], v2[1])
 
-		if dist < lmin:
-			# print "T1", i1, i2, dist
+		if dist < lmin and (i1,i2) not in reverse:
+			print "T1", i1, i2, dist
 			poly_ids = get_4_polys(polys, i1, i2)
 			if -1 in poly_ids:
 				pass
 			else:
 				# find minimum configuration
+				reverse.append((i2,i1))
 
 				# 6 indices for vertices involved in transition
 				indices = get_6_indices(polys, i1, i2, poly_ids)
@@ -422,6 +425,8 @@ def T1_transition(vertices, polys, edges, parameters):
 				# get minimum
 				min_energy = np.min((E0, E_left, E_right))
 				min_i = np.argmin((E0, E_left, E_right))
+				print min_i
+
 				# # do nothing - same configuration
 				if min_i == 0:
 					pass
@@ -431,7 +436,6 @@ def T1_transition(vertices, polys, edges, parameters):
 
 				if min_i == 2:
 					set_T1_right(polys, polys_r, poly_ids, edges, indices)
-
 
 	return polys, edges
 
